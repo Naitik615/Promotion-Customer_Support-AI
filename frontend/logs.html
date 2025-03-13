@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Call Logs & Orders</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .logs-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logs-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .logs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .logs-table th, .logs-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .logs-table th {
+            background: #f5f5f5;
+        }
+
+        .tab-buttons {
+            margin-bottom: 20px;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+        }
+
+        .tab-button.active {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="logs-container">
+        <div class="tab-buttons">
+            <button class="tab-button active" data-tab="orders">Orders</button>
+            <button class="tab-button" data-tab="calls">Call Logs</button>
+        </div>
+
+        <div id="orders" class="logs-section">
+            <h2>Orders</h2>
+            <table class="logs-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer Name</th>
+                        <th>Mobile</th>
+                        <th>Date & Time</th>
+                        <th>Language</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-body"></tbody>
+            </table>
+        </div>
+
+        <div id="calls" class="logs-section" style="display: none;">
+            <h2>Call Logs</h2>
+            <table class="logs-table">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Customer Name</th>
+                        <th>Mobile</th>
+                        <th>Duration</th>
+                        <th>Outcome</th>
+                    </tr>
+                </thead>
+                <tbody id="calls-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Tab switching
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    // Update active button
+                    document.querySelectorAll('.tab-button').forEach(btn => 
+                        btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    // Show selected tab
+                    const tabId = button.dataset.tab;
+                    document.querySelectorAll('.logs-section').forEach(section => 
+                        section.style.display = 'none');
+                    document.getElementById(tabId).style.display = 'block';
+                });
+            });
+
+            // Load data
+            async function loadLogs() {
+                try {
+                    const [ordersResponse, callsResponse] = await Promise.all([
+                        fetch('http://localhost:3000/orders'),
+                        fetch('http://localhost:3000/calls')
+                    ]);
+
+                    const orders = await ordersResponse.json();
+                    const calls = await callsResponse.json();
+
+                    // Populate orders table
+                    const ordersBody = document.getElementById('orders-body');
+                    ordersBody.innerHTML = orders.map(order => `
+                        <tr>
+                            <td>${order.orderId}</td>
+                            <td>${order.customerName}</td>
+                            <td>${order.customerMobile}</td>
+                            <td>${new Date(order.timestamp).toLocaleString()}</td>
+                            <td>${order.language.toUpperCase()}</td>
+                        </tr>
+                    `).join('');
+
+                    // Populate calls table
+                    const callsBody = document.getElementById('calls-body');
+                    callsBody.innerHTML = calls.map(call => `
+                        <tr>
+                            <td>${new Date(call.timestamp).toLocaleString()}</td>
+                            <td>${call.name}</td>
+                            <td>${call.mobile}</td>
+                            <td>${call.callDuration}</td>
+                            <td>${call.callEndType}</td>
+                        </tr>
+                    `).join('');
+                } catch (error) {
+                    console.error('Error loading logs:', error);
+                }
+            }
+
+            loadLogs();
+            // Refresh logs every 30 seconds
+            setInterval(loadLogs, 30000);
+        });
+    </script>
+</body>
+</html>

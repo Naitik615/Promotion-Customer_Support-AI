@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Phone Agent Interface</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 1200px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 10px 20px;
+            background-color: transparent;
+        }
+
+        .nav-links a {
+            margin: 0 10px;
+        }
+
+        main {
+            display: flex;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .how-to-use {
+            width: 25%;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-right: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .how-to-use h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .how-to-use ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .how-to-use ul li {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .how-to-use ul li i {
+            color: #4CAF50;
+            margin-right: 8px;
+        }
+
+        .events-panel, .phone-container {
+            flex: 1;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .phone-container {
+            margin-left: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .conversation-log {
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 30%;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header>
+            <div class="logo">
+                <img src="logo.gif" alt="Logo" id="logo">
+            </div>
+            <div class="nav-links">
+                <a href="main.html">
+                    <img src="assets/home.gif" alt="Home" class="home-icon">
+                </a>
+                <a href="information.html">
+                    <img src="assets/information.gif" alt="Information" class="info-icon">
+                </a>
+                <a href="service.html">
+                    <img src="assets/managing.gif" alt="Services" class="managing-icon">
+                </a>
+                <a href="contact.html" class="contact-link">
+                    <img src="assets/contact.gif" alt="Contact" class="contact-icon">
+                </a>
+                <a href="logs.html">
+                    <img src="assets/logs.gif" alt="Logs" class="logs-icon">
+                </a>
+            </div>
+        </header>
+
+        <main>
+            <!-- How to Use Section -->
+            <div class="how-to-use">
+                <h2>How to Use</h2>
+                <ul>
+                    <li><i class="fas fa-plus-circle"></i> Click "Add Event" to add a new contact.</li>
+                    <li><i class="fas fa-phone-alt"></i> Start a campaign by clicking "Start Campaign."</li>
+                    <li><i class="fas fa-comments"></i> Monitor conversation logs in real-time.</li>
+                    <li><i class="fas fa-cog"></i> Use the settings to customize your experience.</li>
+                </ul>
+            </div>
+
+            <!-- Events Panel -->
+            <div class="events-panel">
+                <h2>Contact Events</h2>
+                <button id="addEventBtn" class="primary-btn">
+                    <i class="fas fa-plus"></i> Add Event
+                </button>
+                <div id="eventsList">
+                    <!-- Events will be added here dynamically -->
+                </div>
+                <button id="startButton" class="start-btn" disabled>
+                    Start Campaign
+                </button>
+            </div>
+
+            <!-- Phone Screen Simulation -->
+            <div class="phone-container">
+                <div class="phone-frame">
+                    <div class="phone-screen">
+                        <!-- Phone content will be shown here when started -->
+                        <div class="screen-content">
+                            <p>Campaign not started</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conversation Log Panel -->
+                <div class="conversation-log">
+                    <div class="log-header">
+                        <span>Conversation Log</span>
+                        <div class="status-indicator">
+                            <span id="statusText">Idle</span>
+                            <div id="statusLight"></div>
+                        </div>
+                    </div>
+                    <div id="logContent"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Event Modal -->
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add New Contact</h2>
+            <form id="eventForm">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <select id="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="mobile">Mobile Number:</label>
+                    <input type="tel" id="mobile" pattern="[0-9]{10}" required>
+                </div>
+                <div class="form-group">
+                    <label for="language">Language:</label>
+                    <select id="language" required>
+                        <option value="">Select Language</option>
+                        <option value="en">English</option>
+                        <option value="hi">Hindi</option>
+                    </select>
+                </div>
+                <button type="submit" class="primary-btn">Save Contact</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

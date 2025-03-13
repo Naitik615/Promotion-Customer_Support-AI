@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Santosh AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Floating Elements (same as main page) */
+        .geometric-elements {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.3;
+            left: 50%;
+            top: 50%;
+            transform-origin: 0 0;
+            animation: orbit 20s linear infinite;
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(255, 50, 50, 0.5);
+        }
+
+        /* Contact Content Styles */
+        .contact-container {
+            max-width: 800px;
+            width: 90%;
+            margin: 50px auto;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .contact-gif {
+            width: 300px;
+            height: 300px;
+            margin: 30px auto;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 50, 50, 0.3);
+        }
+
+        .contact-info {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            margin-top: 30px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #ff3b3b;
+        }
+
+        .contact-details {
+            margin: 20px 0;
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+
+        .contact-details p {
+            margin: 10px 0;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #ff3b3b;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #ff1a1a;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Elements -->
+    <div class="geometric-elements"></div>
+
+    <div class="contact-container">
+        <h1>Contact Us</h1>
+        
+        <img src="assets/logoimp.gif" alt="Contact Animation" class="contact-gif">
+        
+        <div class="contact-info">
+            <div class="contact-details">
+                <p>📧 Email: cypherchaser@gmail.com</p>
+                <p>📱 Phone: +91 9050446614</p>
+                <p>🌐 Website: www.santoshai.com</p>
+                <p>📍 Location: Deheradune, India</p>
+            </div>
+            
+            <p>Feel free to reach out to us for any queries or support.</p>
+            <p>We're available 24/7 to assist you!</p>
+            
+            <a href="index.html" class="back-button">Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        // Add floating shapes (same as main page)
+        const geometricElements = document.querySelector('.geometric-elements');
+        const screenDiagonal = Math.sqrt(
+            Math.pow(window.innerWidth, 2) + 
+            Math.pow(window.innerHeight, 2)
+        );
+        
+        for (let i = 0; i < 25; i++) {
+            const shape = document.createElement('div');
+            shape.className = 'shape';
+            
+            const baseRadius = screenDiagonal / 3;
+            const randomOffset = Math.random() * 200 - 100;
+            const orbitRadius = baseRadius + (i * 30) + randomOffset;
+            shape.style.setProperty('--orbit-radius', `${orbitRadius}px`);
+            
+            const size = Math.random() * 100 + 30;
+            shape.style.width = size + 'px';
+            shape.style.height = size + 'px';
+            
+            const red = Math.floor(Math.random() * 55) + 200;
+            const green = Math.floor(Math.random() * 30);
+            const blue = Math.floor(Math.random() * 30);
+            shape.style.background = `rgba(${red}, ${green}, ${blue}, 0.4)`;
+            
+            const speed = 15 + Math.random() * 25;
+            shape.style.animationDuration = `${speed}s`;
+            
+            shape.style.animationDelay = `${-Math.random() * 40}s`;
+            
+            const rotationOffset = Math.random() * 360;
+            shape.style.transform = `rotate(${rotationOffset}deg)`;
+            
+            geometricElements.appendChild(shape);
+        }
+    </script>
+</body>
+</html>
